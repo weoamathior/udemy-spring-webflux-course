@@ -38,4 +38,8 @@ public class ProductService {
                 .map(EntityDtoUtil::toDto);
     }
 
+    // using 'void' will not work because everything in the reactive world needs a subscriber
+    public Mono<Void> deleteProduct(String id) {
+        return productRepository.deleteById(id);
+    }
 }
