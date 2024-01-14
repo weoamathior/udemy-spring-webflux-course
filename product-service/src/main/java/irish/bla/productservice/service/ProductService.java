@@ -1,0 +1,31 @@
+package irish.bla.productservice.service;
+
+import irish.bla.productservice.dto.ProductDto;
+import irish.bla.productservice.repository.ProductRepository;
+import irish.bla.productservice.util.EntityDtoUtil;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+@Service
+@RequiredArgsConstructor
+public class ProductService {
+   private final ProductRepository productRepository;
+
+   public Flux<ProductDto> getAll() {
+       return productRepository.findAll()
+               .map(EntityDtoUtil::toDto);
+   }
+
+   public Mono<ProductDto> getProductById(String id) {
+       return productRepository.findById(id).map(EntityDtoUtil::toDto);
+   }
+
+   public Mono<ProductDto> insertProduct(Mono<ProductDto> productDto) {
+       return productDto.map(EntityDtoUtil::toEntity)
+               .flatMap(productRepository::insert)
+               .map(EntityDtoUtil::toDto);
+   }
+
+}
