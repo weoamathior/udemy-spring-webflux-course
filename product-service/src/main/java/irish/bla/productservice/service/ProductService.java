@@ -11,21 +11,31 @@ import reactor.core.publisher.Mono;
 @Service
 @RequiredArgsConstructor
 public class ProductService {
-   private final ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
-   public Flux<ProductDto> getAll() {
-       return productRepository.findAll()
-               .map(EntityDtoUtil::toDto);
-   }
+    public Flux<ProductDto> getAll() {
+        return productRepository.findAll()
+                .map(EntityDtoUtil::toDto);
+    }
 
-   public Mono<ProductDto> getProductById(String id) {
-       return productRepository.findById(id).map(EntityDtoUtil::toDto);
-   }
+    public Mono<ProductDto> getProductById(String id) {
+        return productRepository.findById(id).map(EntityDtoUtil::toDto);
+    }
 
-   public Mono<ProductDto> insertProduct(Mono<ProductDto> productDto) {
-       return productDto.map(EntityDtoUtil::toEntity)
-               .flatMap(productRepository::insert)
-               .map(EntityDtoUtil::toDto);
-   }
+    public Mono<ProductDto> insertProduct(Mono<ProductDto> productDto) {
+        return productDto.map(EntityDtoUtil::toEntity)
+                .flatMap(productRepository::insert)
+                .map(EntityDtoUtil::toDto);
+    }
+
+    public Mono<ProductDto> updateProduct(String id, Mono<ProductDto> productDtoMono) {
+        return productRepository.findById(id)
+                .flatMap(p -> productDtoMono
+                        .map(EntityDtoUtil::toEntity)
+                        .doOnNext(e -> e.setId(id))
+                )
+                .flatMap(productRepository::save)
+                .map(EntityDtoUtil::toDto);
+    }
 
 }
