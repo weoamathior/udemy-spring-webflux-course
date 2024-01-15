@@ -32,6 +32,14 @@ public class ProductController {
         return productService.getAll();
     }
 
+    /*
+    curl 'localhost:8091/product/price-range?from=10&to=20'
+     */
+    @GetMapping("price-range")
+    public Flux<ProductDto> byPriceRange(@RequestParam int from, @RequestParam int to) {
+        return productService.getProductByPriceRange(from, to);
+    }
+
     @GetMapping("{id}")
     public Mono<ResponseEntity<ProductDto>> getProductById(@PathVariable String id) {
         return productService.getProductById(id)
