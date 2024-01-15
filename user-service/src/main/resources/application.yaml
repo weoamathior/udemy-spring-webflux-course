@@ -3,6 +3,7 @@ server:
 
 spring:
   r2dbc:
-    url: r2dbc:h2:mem:///userdb;DB_CLOSE_DELAY=-1
-    username:
-    password:
+    url: r2dbc:postgresql://localhost:5432/userdb
+#    url: r2dbc:h2:mem:///userdb;DB_CLOSE_DELAY=-1
+    username: postgres
+    password: postgres
