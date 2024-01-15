@@ -9,6 +9,16 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+/*
+  curl localhost:8091/product/all
+  curl -XPOST -H "Content-type: application/json" -d '{"description":"foo","price":10}' localhost:8091/product
+  curl localhost:8091/product/65a54d35ad858a27cf0d8eac
+  curl -XPUT -H "Content-type: application/json" -d '{"description":"foo","price":20}' localhost:8091/product/65a54d35ad858a27cf0d8eac
+  curl localhost:8091/product/all
+  curl -XDELETE localhost:8091/product/65a54d35ad858a27cf0d8eac
+
+ */
+
 @Slf4j
 @RestController
 @RequestMapping("product")

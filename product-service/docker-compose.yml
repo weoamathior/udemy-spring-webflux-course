@@ -10,5 +10,5 @@ services:
         max-size: 1g
     environment:
       - MONGO_INITDB_ROOT_USERNAME=mongoadmin
-      - MONGO_INITDB_ROOT_PASSWORD=bdung
+      - MONGO_INITDB_ROOT_PASSWORD=password
     image: mongo
