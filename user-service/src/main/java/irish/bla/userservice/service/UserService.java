@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class UserServivce {
+public class UserService {
 
     private final UserRepository userRepository;
 
