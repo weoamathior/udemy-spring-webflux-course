@@ -9,6 +9,16 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+/*
+  curl -XPOST -H "Content-type: application/json" -d '{"name":"nacho","balance":1000}' http://localhost:8092/user
+  curl -XPUT -H "Content-type: application/json" -d '{"name":"nacho libre","balance":1000}' http://localhost:8092/user/5
+  curl http://localhost:8092/user/all | jq
+  curl localhost:8092/user/50 | jq
+  curl -XDELETE localhost:8092/user/5
+  curl -XPOST -H "Content-type: application/json" -d '{"userId":6, "amount":600}' http://localhost:8092/user/transaction
+
+ */
+
 @Slf4j
 @RestController
 @RequestMapping("user")
@@ -35,7 +45,7 @@ public class UserController {
     }
 
     @PutMapping("{id}")
-    public Mono<ResponseEntity<UserDto>> update(@PathVariable Integer id, Mono<UserDto> userDto) {
+    public Mono<ResponseEntity<UserDto>> update(@PathVariable Integer id,@RequestBody Mono<UserDto> userDto) {
         return userService.updateUser(id, userDto)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.badRequest().build());
