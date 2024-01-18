@@ -36,7 +36,7 @@ public class OrderFulfillmentService {
     }
 
     private Mono<RequestContext> userRequestResponse(RequestContext context) {
-        this.userClient.authorizeTransaction(context.getTransactionRequestDto())
+        return this.userClient.authorizeTransaction(context.getTransactionRequestDto())
                 .doOnNext(context::setTransactionResponseDto)
                 .thenReturn(context);
     }
