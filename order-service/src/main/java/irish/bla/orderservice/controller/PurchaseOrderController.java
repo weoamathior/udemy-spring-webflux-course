@@ -3,12 +3,11 @@ package irish.bla.orderservice.controller;
 import irish.bla.orderservice.dto.PurchaseOrderRequestDto;
 import irish.bla.orderservice.dto.PurchaseOrderResponseDto;
 import irish.bla.orderservice.service.OrderFulfillmentService;
+import irish.bla.orderservice.service.OrderQueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -17,10 +16,16 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class PurchaseOrderController {
     private final OrderFulfillmentService orderFulfillmentService;
+    private final OrderQueryService orderQueryService;
 
     @PostMapping
     public Mono<PurchaseOrderResponseDto> order(@RequestBody Mono<PurchaseOrderRequestDto> req) {
         return orderFulfillmentService.processOrder(req);
+    }
+
+    @GetMapping("user/{userId}")
+    public Flux<PurchaseOrderResponseDto> getOrdersByUserID(@PathVariable int userId) {
+        return orderQueryService.getProductsByUserID(userId);
     }
 
 }
