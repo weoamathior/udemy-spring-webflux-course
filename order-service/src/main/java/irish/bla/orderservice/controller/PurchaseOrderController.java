@@ -6,7 +6,11 @@ import irish.bla.orderservice.service.OrderFulfillmentService;
 import irish.bla.orderservice.service.OrderQueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -22,8 +26,13 @@ public class PurchaseOrderController {
     private final OrderQueryService orderQueryService;
 
     @PostMapping
-    public Mono<PurchaseOrderResponseDto> order(@RequestBody Mono<PurchaseOrderRequestDto> req) {
-        return orderFulfillmentService.processOrder(req);
+    public Mono<ResponseEntity<PurchaseOrderResponseDto>> order(@RequestBody Mono<PurchaseOrderRequestDto> req) {
+        return orderFulfillmentService.processOrder(req)
+                .map(ResponseEntity::ok)
+                // match on the Response error -> i.e. if the response sez "404 thing not found"
+                .onErrorReturn(WebClientResponseException.class, ResponseEntity.badRequest().build())
+                // match on the Request exception -> i.e. the service is missing, unavailable
+                .onErrorReturn(WebClientRequestException.class, ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).build());
     }
 
     @GetMapping("user/{userId}")
