@@ -42,7 +42,7 @@ public class OrderFulfillmentService {
     }
 
     private Mono<RequestContext> productRequestResponse(RequestContext context) {
-        return this.productClient.getProductById(context.getProductDto().getId())
+        return this.productClient.getProductById(context.getPurchaseOrderRequestDto().getProductId())
                 .doOnNext(context::setProductDto)
                 .thenReturn(context);
     }

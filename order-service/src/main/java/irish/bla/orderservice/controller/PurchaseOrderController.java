@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+/*
+curl -XPOST -H "Content-type: application/json" -d '{"productId":"65a55a2b5f201a698c855a16", "userId":1}' localhost:8080/order
+ */
 @RestController
 @Slf4j
 @RequestMapping("order")

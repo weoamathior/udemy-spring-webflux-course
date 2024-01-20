@@ -10,7 +10,7 @@ import org.springframework.util.StreamUtils;
 
 import java.nio.charset.StandardCharsets;
 
-//@Service
+@Service
 @RequiredArgsConstructor
 public class DataSetupService implements CommandLineRunner {
 
