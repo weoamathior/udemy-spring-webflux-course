@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 /*
   curl localhost:8091/product/all
   curl -XPOST -H "Content-type: application/json" -d '{"description":"foo","price":10}' localhost:8091/product
@@ -42,6 +44,7 @@ public class ProductController {
 
     @GetMapping("{id}")
     public Mono<ResponseEntity<ProductDto>> getProductById(@PathVariable String id) {
+        simulateRandomException();
         return productService.getProductById(id)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
@@ -62,5 +65,12 @@ public class ProductController {
     @DeleteMapping("{id}")
     public Mono<Void> deleteProduct(@PathVariable String id) {
         return productService.deleteProduct(id);
+    }
+
+    private void simulateRandomException() {
+        int nextInt = ThreadLocalRandom.current().nextInt(1, 10);
+        if (nextInt > 5) {
+            throw new RuntimeException("something is wrong");
+        }
     }
 }

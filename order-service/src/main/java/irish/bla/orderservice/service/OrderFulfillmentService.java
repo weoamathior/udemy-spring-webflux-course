@@ -12,6 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
+import reactor.util.retry.Retry;
+
+import java.time.Duration;
 
 @Slf4j
 @Service
@@ -44,6 +47,8 @@ public class OrderFulfillmentService {
     private Mono<RequestContext> productRequestResponse(RequestContext context) {
         return this.productClient.getProductById(context.getPurchaseOrderRequestDto().getProductId())
                 .doOnNext(context::setProductDto)
+//                .retry(5)
+                .retryWhen(Retry.fixedDelay(5, Duration.ofSeconds(1)))
                 .thenReturn(context);
     }
 
